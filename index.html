@@ -137,11 +137,9 @@ footer p { margin: 0 0 6px; }
       <li>Calçados</li>
       <li>Cobertores e roupa de cama</li>
       <li>Colchões</li>
-      <li>Móveis</li>
       <li>Alimentos</li>
       <li>Higiene e limpeza</li>
     </ul>
-    <p class="nota">Móveis e itens grandes: cadastre no formulário de doação que a equipe combina a retirada.</p>
   </section>
 
   <section>
@@ -162,13 +160,14 @@ footer p { margin: 0 0 6px; }
 <script>
 // Cole aqui os links "divulgar" gerados pelo script do Google Forms
 const LINKS = {
-  pedido: "",
-  doacao: "",
+  pedido: "pedido.html",
+  doacao: "doacao.html",
 };
 for (const [chave, id] of [["pedido", "btn-pedido"], ["doacao", "btn-doacao"]]) {
   const el = document.getElementById(id);
   if (LINKS[chave]) {
     el.href = LINKS[chave];
+    if (!/^https?:/.test(LINKS[chave])) el.removeAttribute("target");
   } else {
     el.setAttribute("aria-disabled", "true");
     el.querySelector(".s").textContent = "Formulário disponível em instantes";

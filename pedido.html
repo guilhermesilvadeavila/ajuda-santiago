@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Pedido de ajuda para famílias atingidas pelo temporal em Santiago/RS.">
+<title>Pedido de ajuda · Ajuda Santiago</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+/* Mesmo sistema visual da LP: coluna única, lona azul como acento, laranja só para risco/erro. */
+:root {
+  --bg: #f3f5f7; --surface: #ffffff; --fg: #16202b; --muted: #56626f; --line: #cfd7df;
+  --lona: #1f5fa8; --lona-ink: #ffffff; --lona-soft: #e3edf8;
+  --alerta: #c2410c; --alerta-soft: #fdeee4; --ok: #177245; --ok-soft: #e3f4ea;
+  --font-display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+  --font-body: "Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f151c; --surface: #17202a; --fg: #e8edf2; --muted: #9aa7b4; --line: #2f3c4a;
+    --lona: #4d8fdb; --lona-ink: #07111d; --lona-soft: #16293f;
+    --alerta: #fb8a4a; --alerta-soft: #2e1a10; --ok: #4ccb86; --ok-soft: #10281b;
+    color-scheme: dark;
+  }
+}
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 1.0625rem; line-height: 1.5; }
+.wrap { max-width: 36rem; margin: 0 auto; padding-inline: 16px; padding-block: 20px 64px; display: grid; gap: 24px; }
+
+.voltar { color: var(--lona); font-weight: 600; text-decoration: none; font-size: .95rem; }
+header { display: grid; gap: 4px; }
+.eyebrow { font-family: var(--font-display); font-weight: 600; font-size: .95rem; letter-spacing: .08em; text-transform: uppercase; color: var(--lona); }
+h1 { font-family: var(--font-display); font-weight: 800; font-size: clamp(2.4rem, 11vw, 3.4rem); line-height: .95; margin: 0; text-transform: uppercase; }
+.lead { margin: 4px 0 0; color: var(--muted); }
+
+.emerg { background: var(--alerta-soft); border-left: 5px solid var(--alerta); padding: 12px 14px; font-size: .975rem; }
+.emerg b { color: var(--alerta); }
+
+form { display: grid; gap: 20px; }
+fieldset { border: 1px solid var(--line); background: var(--surface); border-radius: 6px; margin: 0; padding: 16px; display: grid; gap: 16px; min-width: 0; }
+legend { font-family: var(--font-display); font-weight: 800; font-size: 1.35rem; text-transform: uppercase; letter-spacing: .02em; padding: 0 6px; margin-left: -6px; }
+
+.campo { display: grid; gap: 6px; min-width: 0; }
+.campo > label, .rotulo { font-weight: 700; }
+.req::after { content: " *"; color: var(--alerta); }
+.ajuda { font-size: .9rem; color: var(--muted); margin: -2px 0 0; }
+input[type=text], input[type=tel], input[type=number], textarea, select {
+  width: 100%; font: inherit; color: var(--fg); background: var(--bg); border: 1.5px solid var(--line);
+  border-radius: 6px; padding: 12px; min-height: 48px;
+}
+textarea { min-height: 88px; resize: vertical; }
+input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 3px solid var(--lona); outline-offset: 1px; border-color: var(--lona); }
+
+.opcoes { display: grid; gap: 8px; }
+.opcoes.duas { grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); }
+.op { display: flex; align-items: center; gap: 10px; padding: 12px; min-height: 48px; border: 1.5px solid var(--line); border-radius: 6px; background: var(--bg); cursor: pointer; }
+.op input { width: 20px; height: 20px; accent-color: var(--lona); flex: none; margin: 0; }
+.op:has(input:checked) { border-color: var(--lona); background: var(--lona-soft); font-weight: 600; }
+.op:has(input:focus-visible) { outline: 3px solid var(--lona); outline-offset: 1px; }
+
+
+.erro-campo { outline: 2px solid var(--alerta); outline-offset: 2px; border-radius: 6px; }
+.msg-erro { background: var(--alerta-soft); color: var(--fg); border-left: 5px solid var(--alerta); padding: 12px 14px; }
+
+.enviar { font-family: var(--font-display); font-weight: 800; font-size: 1.6rem; text-transform: uppercase; background: var(--lona); color: var(--lona-ink); border: none; border-radius: 6px; padding: 16px; cursor: pointer; min-height: 60px; }
+.enviar:disabled { opacity: .6; cursor: progress; }
+.enviar:focus-visible { outline: 3px solid var(--alerta); outline-offset: 3px; }
+.rascunho { font-size: .875rem; color: var(--muted); margin: 0; text-align: center; }
+
+.sucesso { background: var(--ok-soft); border-left: 5px solid var(--ok); padding: 20px 16px; display: grid; gap: 8px; }
+.sucesso h2 { font-family: var(--font-display); font-weight: 800; text-transform: uppercase; font-size: 2rem; margin: 0; color: var(--ok); }
+.sucesso p { margin: 0; }
+.protocolo { font-family: var(--font-display); font-weight: 800; font-size: 2.6rem; letter-spacing: .04em; font-variant-numeric: tabular-nums; user-select: all; }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="voltar" href="./">← Ajuda Santiago</a>
+
+  <header>
+    <div class="eyebrow">Temporal · Santiago/RS</div>
+    <h1>Pedido de ajuda</h1>
+    <p class="lead">Um pedido por casa. Leva uns 3 minutos. A equipe entra em contato pelo WhatsApp.</p>
+  </header>
+
+  <div class="emerg"><b>Risco de vida?</b> Não espere o formulário: Defesa Civil <b>199</b> · Bombeiros <b>193</b> · SAMU <b>192</b>.</div>
+
+  <form id="form" novalidate>
+    <!-- anti-spam: humanos não veem este campo -->
+    <div class="hp" aria-hidden="true"><label>Site <input type="text" name="website" id="website" tabindex="-1" autocomplete="off"></label></div>
+
+    <fieldset>
+      <legend>Quem pede e onde</legend>
+      <div class="campo">
+        <span class="rotulo req">Quem está preenchendo?</span>
+        <div class="opcoes duas">
+          <label class="op"><input type="radio" name="preenchido_por" value="A própria família" checked> A própria família</label>
+          <label class="op"><input type="radio" name="preenchido_por" value="Voluntário"> Voluntário</label>
+        </div>
+      </div>
+      <div class="campo" data-se="preenchido_por=Voluntário" hidden>
+        <label for="voluntario_nome" class="req">Nome do voluntário</label>
+        <input type="text" id="voluntario_nome" name="voluntario_nome" autocomplete="off">
+      </div>
+      <div class="campo">
+        <label for="nome" class="req">Nome do responsável pela casa</label>
+        <input type="text" id="nome" name="nome" required autocomplete="name">
+      </div>
+      <div class="campo">
+        <label for="telefone" class="req">Telefone / WhatsApp</label>
+        <input type="tel" id="telefone" name="telefone" required inputmode="tel" autocomplete="tel" placeholder="(55) 9 9999-9999">
+      </div>
+      <div class="campo">
+        <label for="telefone2">Outro telefone para recado</label>
+        <input type="tel" id="telefone2" name="telefone2" inputmode="tel">
+      </div>
+      <div class="campo">
+        <label for="endereco" class="req">Endereço (rua e número)</label>
+        <input type="text" id="endereco" name="endereco" required autocomplete="street-address">
+      </div>
+      <div class="campo">
+        <label for="bairro" class="req">Bairro</label>
+        <input type="text" id="bairro" name="bairro" required>
+      </div>
+      <div class="campo">
+        <label for="referencia">Ponto de referência</label>
+        <input type="text" id="referencia" name="referencia" placeholder="Ex.: ao lado do mercado, casa verde">
+      </div>
+      <div class="campo">
+        <label for="localizacao">Link de localização</label>
+        <p class="ajuda">Se tiver, cole o link do Google Maps ou da localização do WhatsApp.</p>
+        <input type="text" id="localizacao" name="localizacao" inputmode="url">
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Situação da casa</legend>
+      <div class="campo" data-grupo="dano">
+        <span class="rotulo req">Qual o dano na casa?</span>
+        <div class="opcoes">
+          <label class="op"><input type="radio" name="dano" value="Totalmente destruída / inabitável"> Totalmente destruída, não dá pra ficar</label>
+          <label class="op"><input type="radio" name="dano" value="Parcialmente afetada"> Parcialmente afetada, mas dá pra ficar</label>
+          <label class="op"><input type="radio" name="dano" value="Danos leves"> Danos leves</label>
+        </div>
+      </div>
+      <div class="campo">
+        <span class="rotulo">O que foi atingido?</span>
+        <div class="opcoes duas">
+          <label class="op"><input type="checkbox" name="afetado" value="Telhado"> Telhado</label>
+          <label class="op"><input type="checkbox" name="afetado" value="Paredes"> Paredes</label>
+          <label class="op"><input type="checkbox" name="afetado" value="Janelas/portas"> Janelas / portas</label>
+          <label class="op"><input type="checkbox" name="afetado" value="Móveis/eletro"> Móveis / eletro</label>
+        </div>
+      </div>
+      <div class="campo" data-grupo="moradia">
+        <span class="rotulo req">A família continua morando lá?</span>
+        <div class="opcoes">
+          <label class="op"><input type="radio" name="moradia" value="Sim, no local"> Sim</label>
+          <label class="op"><input type="radio" name="moradia" value="Em abrigo"> Não, está em abrigo</label>
+          <label class="op"><input type="radio" name="moradia" value="Com parentes/amigos"> Não, está com parentes ou amigos</label>
+        </div>
+      </div>
+      <div class="campo" data-grupo="risco">
+        <span class="rotulo req">Tem risco agora no local?</span>
+        <p class="ajuda">Fio caído, parede rachada, árvore sobre a casa, risco de desabar.</p>
+        <div class="opcoes duas">
+          <label class="op"><input type="radio" name="risco" value="Sim"> Sim</label>
+          <label class="op"><input type="radio" name="risco" value="Não"> Não</label>
+          <label class="op"><input type="radio" name="risco" value="Não sei"> Não sei</label>
+        </div>
+      </div>
+      <div class="campo" data-se="risco=Sim" hidden>
+        <label for="risco_desc">Qual é o risco?</label>
+        <textarea id="risco_desc" name="risco_desc"></textarea>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Quem mora na casa</legend>
+      <div class="campo">
+        <label for="pessoas" class="req">Quantas pessoas?</label>
+        <input type="number" id="pessoas" name="pessoas" min="1" max="30" inputmode="numeric" required>
+      </div>
+      <div class="campo" data-grupo="vulneraveis">
+        <span class="rotulo req">Na casa tem:</span>
+        <div class="opcoes">
+          <label class="op"><input type="checkbox" name="vulneraveis" value="Idosos (60+)"> Idosos (60+)</label>
+          <label class="op"><input type="checkbox" name="vulneraveis" value="Crianças até 5 anos"> Crianças até 5 anos</label>
+          <label class="op"><input type="checkbox" name="vulneraveis" value="Gestantes"> Gestantes</label>
+          <label class="op"><input type="checkbox" name="vulneraveis" value="PcD / mobilidade reduzida"> Pessoa com deficiência ou mobilidade reduzida</label>
+          <label class="op"><input type="checkbox" name="vulneraveis" value="Acamados / cuidado contínuo"> Pessoa acamada ou que precisa de cuidado contínuo</label>
+          <label class="op"><input type="checkbox" name="vulneraveis" value="Nenhum" data-exclusivo> Nenhum desses</label>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Do que precisa</legend>
+      <div class="campo" data-grupo="necessidades">
+        <span class="rotulo req">Marque tudo o que precisa</span>
+        <div class="opcoes duas">
+          <label class="op"><input type="checkbox" name="necessidades" value="Lona"> Lona</label>
+          <label class="op"><input type="checkbox" name="necessidades" value="Mão de obra p/ lona"> Ajuda p/ colocar lona</label>
+          <label class="op"><input type="checkbox" name="necessidades" value="Telhas/material"> Telhas / material</label>
+          <label class="op"><input type="checkbox" name="necessidades" value="Roupas"> Roupas</label>
+          <label class="op"><input type="checkbox" name="necessidades" value="Calçados"> Calçados</label>
+          <label class="op"><input type="checkbox" name="necessidades" value="Cobertores/roupa de cama"> Cobertores / roupa de cama</label>
+          <label class="op"><input type="checkbox" name="necessidades" value="Colchões"> Colchões</label>
+          <label class="op"><input type="checkbox" name="necessidades" value="Alimentos"> Alimentos</label>
+          <label class="op"><input type="checkbox" name="necessidades" value="Água potável"> Água potável</label>
+          <label class="op"><input type="checkbox" name="necessidades" value="Higiene/limpeza"> Higiene / limpeza</label>
+        </div>
+      </div>
+      <div class="campo" data-se="necessidades=Colchões" hidden>
+        <label for="colchoes">Quantos colchões e de que tamanho?</label>
+        <input type="text" id="colchoes" name="colchoes" placeholder="Ex.: 1 casal, 2 solteiro">
+      </div>
+      <div class="campo">
+        <label for="outros">Outra necessidade</label>
+        <input type="text" id="outros" name="outros">
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Finalizar</legend>
+      <div class="campo">
+        <label for="obs">Algo urgente que não foi perguntado?</label>
+        <textarea id="obs" name="obs"></textarea>
+      </div>
+      <div class="campo" data-grupo="consentimento">
+        <label class="op"><input type="checkbox" name="consentimento" value="Sim" id="consentimento"> Autorizo o uso destes dados só para organizar a ajuda.</label>
+      </div>
+    </fieldset>
+
+    <div id="erro" class="msg-erro" role="alert" hidden></div>
+    <button type="submit" class="enviar" id="enviar">Enviar pedido</button>
+    <p class="rascunho" id="rascunho-info">O que você digita fica salvo neste aparelho até enviar.</p>
+  </form>
+
+  <div id="sucesso" class="sucesso" role="status" hidden>
+    <h2>Pedido recebido</h2>
+    <p>Anote seu número de protocolo:</p>
+    <div class="protocolo" id="protocolo">—</div>
+    <p>A equipe vai entrar em contato pelo WhatsApp informado. Se a situação piorar, envie um novo pedido citando o protocolo.</p>
+    <a class="voltar" href="./">← Voltar para o início</a>
+  </div>
+</div>
+
+<script>
+// URL do Web App do Apps Script (termina em /exec)
+const ENDPOINT = "https://script.google.com/macros/s/AKfycbzoy5lbL8Ses1Yf8DbkC10vMzN2HMdptC7oCg8yDiMteAugSLRmNN9lJ59lnzrUOv1obA/exec";
+const CHAVE_RASCUNHO = "ajuda-santiago-pedido";
+
+const form = document.getElementById("form");
+
+// ---------- campos condicionais ----------
+function valores(nome) {
+  return [...form.querySelectorAll(`[name="${nome}"]:checked`)].map(i => i.value);
+}
+function atualizarCondicionais() {
+  form.querySelectorAll("[data-se]").forEach(el => {
+    const [nome, alvos] = el.dataset.se.split("=");
+    const marcados = valores(nome);
+    el.hidden = !alvos.split("|").some(a => marcados.includes(a));
+  });
+}
+
+// "Nenhum desses" desmarca os outros e vice-versa
+form.addEventListener("change", e => {
+  const t = e.target;
+  if (t.name === "vulneraveis" && t.checked) {
+    form.querySelectorAll('[name="vulneraveis"]').forEach(i => {
+      if (i !== t && (t.hasAttribute("data-exclusivo") || i.hasAttribute("data-exclusivo"))) i.checked = false;
+    });
+  }
+  atualizarCondicionais();
+  salvarRascunho();
+});
+form.addEventListener("input", salvarRascunho);
+
+// ---------- coleta ----------
+function coletar() {
+  const fd = new FormData(form);
+  const multi = ["afetado", "vulneraveis", "necessidades"];
+  const d = {};
+  for (const [k, v] of fd.entries()) {
+    if (multi.includes(k)) continue;
+    d[k] = typeof v === "string" ? v.trim() : v;
+  }
+  multi.forEach(k => d[k] = fd.getAll(k));
+  return d;
+}
+
+// ---------- validação ----------
+function validar(d) {
+  form.querySelectorAll(".erro-campo").forEach(e => e.classList.remove("erro-campo"));
+  const faltando = [];
+  const marcar = (el, nome) => { el.classList.add("erro-campo"); faltando.push({ el, nome }); };
+
+  if (d.preenchido_por === "Voluntário" && !d.voluntario_nome) marcar(form.voluntario_nome, "nome do voluntário");
+  if (!d.nome) marcar(form.nome, "nome");
+  if ((d.telefone || "").replace(/\D/g, "").length < 10) marcar(form.telefone, "telefone com DDD");
+  if (!d.endereco) marcar(form.endereco, "endereço");
+  if (!d.bairro) marcar(form.bairro, "bairro");
+  for (const [g, nome] of [["dano", "dano na casa"], ["moradia", "onde a família está"], ["risco", "se há risco"]]) {
+    if (!d[g]) marcar(form.querySelector(`[data-grupo="${g}"]`), nome);
+  }
+  if (!(Number(d.pessoas) > 0)) marcar(form.pessoas, "quantas pessoas moram");
+  if (!d.vulneraveis.length) marcar(form.querySelector('[data-grupo="vulneraveis"]'), "quem mora na casa");
+  if (!d.necessidades.length && !d.outros) marcar(form.querySelector('[data-grupo="necessidades"]'), "do que precisa");
+  if (d.consentimento !== "Sim") marcar(form.querySelector('[data-grupo="consentimento"]'), "autorização");
+  return faltando;
+}
+
+// ---------- rascunho local ----------
+function salvarRascunho() {
+  try { localStorage.setItem(CHAVE_RASCUNHO, JSON.stringify(coletar())); } catch (_) {}
+}
+function restaurarRascunho() {
+  let d;
+  try { d = JSON.parse(localStorage.getItem(CHAVE_RASCUNHO) || "null"); } catch (_) { return; }
+  if (!d) return;
+  for (const [k, v] of Object.entries(d)) {
+    const els = form.querySelectorAll(`[name="${k}"]`);
+    els.forEach(el => {
+      if (el.type === "checkbox") el.checked = Array.isArray(v) ? v.includes(el.value) : v === el.value;
+      else if (el.type === "radio") el.checked = el.value === v;
+      else if (el.id !== "website") el.value = v;
+    });
+  }
+}
+function limparRascunho() { try { localStorage.removeItem(CHAVE_RASCUNHO); } catch (_) {} }
+
+// ---------- envio ----------
+const erroBox = document.getElementById("erro");
+const btn = document.getElementById("enviar");
+
+form.addEventListener("submit", async e => {
+  e.preventDefault();
+  erroBox.hidden = true;
+  const d = coletar();
+  const faltando = validar(d);
+  if (faltando.length) {
+    erroBox.textContent = "Falta preencher: " + faltando.map(f => f.nome).join(", ") + ".";
+    erroBox.hidden = false;
+    faltando[0].el.scrollIntoView({ behavior: "smooth", block: "center" });
+    return;
+  }
+  if (!ENDPOINT) {
+    erroBox.textContent = "O formulário ainda não está conectado à planilha. Avise a equipe.";
+    erroBox.hidden = false;
+    return;
+  }
+  btn.disabled = true;
+  btn.textContent = "Enviando…";
+  try {
+    // text/plain evita o preflight CORS no Apps Script
+    const res = await fetch(ENDPOINT, { method: "POST", body: JSON.stringify(d) });
+    const r = await res.json();
+    if (!r.ok) throw new Error(r.erro || "falha");
+    limparRascunho();
+    document.getElementById("protocolo").textContent = r.protocolo;
+    form.hidden = true;
+    document.getElementById("sucesso").hidden = false;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  } catch (err) {
+    erroBox.textContent = "Não conseguimos enviar. Verifique a internet e tente de novo. O que você preencheu continua salvo neste aparelho.";
+    erroBox.hidden = false;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Enviar pedido";
+  }
+});
+
+restaurarRascunho();
+atualizarCondicionais();
+</script>
+</body>
+</html>
