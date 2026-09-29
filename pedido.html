@@ -102,8 +102,8 @@ input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 3px
           <label class="op"><input type="radio" name="preenchido_por" value="Voluntário"> Voluntário</label>
         </div>
       </div>
-      <div class="campo" data-se="preenchido_por=Voluntário" hidden>
-        <label for="voluntario_nome" class="req">Nome do voluntário</label>
+      <div class="campo">
+        <label for="voluntario_nome">Se for voluntário: seu nome</label>
         <input type="text" id="voluntario_nome" name="voluntario_nome" autocomplete="off">
       </div>
       <div class="campo">
@@ -173,8 +173,8 @@ input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 3px
           <label class="op"><input type="radio" name="risco" value="Não sei"> Não sei</label>
         </div>
       </div>
-      <div class="campo" data-se="risco=Sim" hidden>
-        <label for="risco_desc">Qual é o risco?</label>
+      <div class="campo">
+        <label for="risco_desc">Se tem risco: qual é?</label>
         <textarea id="risco_desc" name="risco_desc"></textarea>
       </div>
     </fieldset>
@@ -215,8 +215,8 @@ input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 3px
           <label class="op"><input type="checkbox" name="necessidades" value="Higiene/limpeza"> Higiene / limpeza</label>
         </div>
       </div>
-      <div class="campo" data-se="necessidades=Colchões" hidden>
-        <label for="colchoes">Quantos colchões e de que tamanho?</label>
+      <div class="campo">
+        <label for="colchoes">Se precisa de colchões: quantos e de que tamanho</label>
         <input type="text" id="colchoes" name="colchoes" placeholder="Ex.: 1 casal, 2 solteiro">
       </div>
       <div class="campo">
@@ -257,18 +257,6 @@ const CHAVE_RASCUNHO = "ajuda-santiago-pedido";
 
 const form = document.getElementById("form");
 
-// ---------- campos condicionais ----------
-function valores(nome) {
-  return [...form.querySelectorAll(`[name="${nome}"]:checked`)].map(i => i.value);
-}
-function atualizarCondicionais() {
-  form.querySelectorAll("[data-se]").forEach(el => {
-    const [nome, alvos] = el.dataset.se.split("=");
-    const marcados = valores(nome);
-    el.hidden = !alvos.split("|").some(a => marcados.includes(a));
-  });
-}
-
 // "Nenhum desses" desmarca os outros e vice-versa
 form.addEventListener("change", e => {
   const t = e.target;
@@ -277,7 +265,6 @@ form.addEventListener("change", e => {
       if (i !== t && (t.hasAttribute("data-exclusivo") || i.hasAttribute("data-exclusivo"))) i.checked = false;
     });
   }
-  atualizarCondicionais();
   salvarRascunho();
 });
 form.addEventListener("input", salvarRascunho);
@@ -301,15 +288,15 @@ function validar(d) {
   const faltando = [];
   const marcar = (el, nome) => { el.classList.add("erro-campo"); faltando.push({ el, nome }); };
 
-  if (d.preenchido_por === "Voluntário" && !d.voluntario_nome) marcar(form.voluntario_nome, "nome do voluntário");
-  if (!d.nome) marcar(form.nome, "nome");
-  if ((d.telefone || "").replace(/\D/g, "").length < 10) marcar(form.telefone, "telefone com DDD");
-  if (!d.endereco) marcar(form.endereco, "endereço");
-  if (!d.bairro) marcar(form.bairro, "bairro");
+  if (d.preenchido_por === "Voluntário" && !d.voluntario_nome) marcar(document.getElementById("voluntario_nome"), "nome do voluntário");
+  if (!d.nome) marcar(document.getElementById("nome"), "nome");
+  if ((d.telefone || "").replace(/\D/g, "").length < 10) marcar(document.getElementById("telefone"), "telefone com DDD");
+  if (!d.endereco) marcar(document.getElementById("endereco"), "endereço");
+  if (!d.bairro) marcar(document.getElementById("bairro"), "bairro");
   for (const [g, nome] of [["dano", "dano na casa"], ["moradia", "onde a família está"], ["risco", "se há risco"]]) {
     if (!d[g]) marcar(form.querySelector(`[data-grupo="${g}"]`), nome);
   }
-  if (!(Number(d.pessoas) > 0)) marcar(form.pessoas, "quantas pessoas moram");
+  if (!(Number(d.pessoas) > 0)) marcar(document.getElementById("pessoas"), "quantas pessoas moram");
   if (!d.vulneraveis.length) marcar(form.querySelector('[data-grupo="vulneraveis"]'), "quem mora na casa");
   if (!d.necessidades.length && !d.outros) marcar(form.querySelector('[data-grupo="necessidades"]'), "do que precisa");
   if (d.consentimento !== "Sim") marcar(form.querySelector('[data-grupo="consentimento"]'), "autorização");
@@ -377,7 +364,6 @@ form.addEventListener("submit", async e => {
 });
 
 restaurarRascunho();
-atualizarCondicionais();
 </script>
 </body>
 </html>

@@ -99,11 +99,11 @@ footer p { margin: 0 0 6px; }
   </header>
 
   <div class="acoes">
-    <a class="btn primario" id="btn-pedido" href="#" target="_blank" rel="noopener">
+    <a class="btn primario" id="btn-pedido" href="pedido.html">
       <span class="t">Preciso de ajuda</span>
-      <span class="s">Lona, roupas, móveis, alimentos, mão de obra</span>
+      <span class="s">Lona, roupas, colchões, alimentos, mão de obra</span>
     </a>
-    <a class="btn secundario" id="btn-doacao" href="#" target="_blank" rel="noopener">
+    <a class="btn secundario" id="btn-doacao" href="doacao.html">
       <span class="t">Quero doar ou ajudar</span>
       <span class="s">Itens, material, transporte ou trabalho voluntário</span>
     </a>
@@ -157,22 +157,5 @@ footer p { margin: 0 0 6px; }
   </footer>
 </div>
 
-<script>
-// Cole aqui os links "divulgar" gerados pelo script do Google Forms
-const LINKS = {
-  pedido: "pedido.html",
-  doacao: "doacao.html",
-};
-for (const [chave, id] of [["pedido", "btn-pedido"], ["doacao", "btn-doacao"]]) {
-  const el = document.getElementById(id);
-  if (LINKS[chave]) {
-    el.href = LINKS[chave];
-    if (!/^https?:/.test(LINKS[chave])) el.removeAttribute("target");
-  } else {
-    el.setAttribute("aria-disabled", "true");
-    el.querySelector(".s").textContent = "Formulário disponível em instantes";
-  }
-}
-</script>
 </body>
 </html>

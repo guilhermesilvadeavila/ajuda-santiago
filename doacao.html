@@ -53,16 +53,14 @@ input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 3px
 
 .opcoes { display: grid; gap: 8px; }
 .opcoes.duas { grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); }
-.opcoes.dias { grid-template-columns: repeat(auto-fit, minmax(4.2rem, 1fr)); }
 .op { display: flex; align-items: center; gap: 10px; padding: 12px; min-height: 48px; border: 1.5px solid var(--line); border-radius: 6px; background: var(--bg); cursor: pointer; }
 .op input { width: 20px; height: 20px; accent-color: var(--lona); flex: none; margin: 0; }
 .op:has(input:checked) { border-color: var(--lona); background: var(--lona-soft); font-weight: 600; }
 .op:has(input:focus-visible) { outline: 3px solid var(--lona); outline-offset: 1px; }
 .op small { display: block; font-weight: 400; color: var(--muted); font-size: .875rem; }
 
-.bloco { border-left: 3px solid var(--lona); padding-left: 12px; display: grid; gap: 16px; }
-.coleta { background: var(--lona-soft); border-radius: 6px; padding: 12px; font-size: .95rem; }
-.coleta b { display: block; }
+.opc { font-family: var(--font-body); font-weight: 600; font-size: .8rem; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 1px 6px; vertical-align: middle; margin-left: 4px; }
+.nota-secao { margin: -8px 0 0; color: var(--muted); font-size: .95rem; }
 
 .erro-campo { outline: 2px solid var(--alerta); outline-offset: 2px; border-radius: 6px; }
 .msg-erro { background: var(--alerta-soft); color: var(--fg); border-left: 5px solid var(--alerta); padding: 12px 14px; }
@@ -103,27 +101,20 @@ input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 3px
         <input type="tel" id="telefone" name="telefone" required inputmode="tel" autocomplete="tel" placeholder="(55) 9 9999-9999">
       </div>
       <div class="campo">
-        <label for="bairro">Bairro</label>
-        <input type="text" id="bairro" name="bairro">
+        <label for="endereco" class="req">Endereço (rua e número)</label>
+        <input type="text" id="endereco" name="endereco" required autocomplete="street-address">
+      </div>
+      <div class="campo">
+        <label for="bairro" class="req">Bairro</label>
+        <input type="text" id="bairro" name="bairro" required>
       </div>
     </fieldset>
 
     <fieldset>
-      <legend>Como quer ajudar</legend>
-      <div class="campo" data-grupo="ajuda">
-        <span class="rotulo req">Marque uma ou mais</span>
-        <div class="opcoes">
-          <label class="op"><input type="checkbox" name="ajuda" value="Doar itens"><span>Doar itens<small>Lona, roupas, colchões, alimentos…</small></span></label>
-          <label class="op"><input type="checkbox" name="ajuda" value="Mão de obra"><span>Trabalho voluntário<small>Colocar lona, limpeza, triagem…</small></span></label>
-          <label class="op"><input type="checkbox" name="ajuda" value="Transporte"><span>Transporte<small>Buscar e entregar doações com seu veículo</small></span></label>
-        </div>
-      </div>
-    </fieldset>
-
-    <fieldset data-se="ajuda=Doar itens" hidden>
-      <legend>O que vai doar</legend>
+      <legend>Doação de itens <span class="opc">opcional</span></legend>
+      <p class="nota-secao">Preencha só se for doar alguma coisa.</p>
       <div class="campo" data-grupo="itens">
-        <span class="rotulo req">Itens</span>
+        <span class="rotulo">O que vai doar?</span>
         <div class="opcoes duas">
           <label class="op"><input type="checkbox" name="itens" value="Lona"> Lona</label>
           <label class="op"><input type="checkbox" name="itens" value="Telhas/material"> Telhas / material</label>
@@ -136,89 +127,50 @@ input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 3px
           <label class="op"><input type="checkbox" name="itens" value="Higiene/limpeza"> Higiene / limpeza</label>
         </div>
       </div>
-      <div class="bloco" data-se="itens=Telhas/material" hidden>
-        <div class="campo">
-          <label for="material_desc">Telhas / material: o que e quanto</label>
-          <input type="text" id="material_desc" name="material_desc" placeholder="Ex.: 30 telhas de fibrocimento 2,44 m">
-        </div>
+      <div class="campo">
+        <label for="material_desc">Se for telhas ou material: o que e quanto</label>
+        <input type="text" id="material_desc" name="material_desc" placeholder="Ex.: 30 telhas de fibrocimento">
       </div>
-      <div class="bloco" data-se="itens=Colchões" hidden>
-        <div class="campo">
-          <label for="colchoes_desc">Colchões: quantos e de que tamanho</label>
-          <input type="text" id="colchoes_desc" name="colchoes_desc" placeholder="Ex.: 1 casal, 2 solteiro">
-        </div>
+      <div class="campo">
+        <label for="colchoes_desc">Se for colchões: quantos e de que tamanho</label>
+        <input type="text" id="colchoes_desc" name="colchoes_desc" placeholder="Ex.: 1 casal, 2 solteiro">
       </div>
       <div class="campo">
         <label for="outros_itens">Outro item</label>
         <input type="text" id="outros_itens" name="outros_itens">
       </div>
-
       <div class="campo" data-grupo="entrega">
-        <span class="rotulo req">Como a doação chega até nós?</span>
+        <span class="rotulo">Como a doação chega até nós?</span>
         <div class="opcoes">
-          <label class="op"><input type="radio" name="entrega" value="Leva ao ponto de coleta"> Eu levo ao ponto de coleta</label>
-          <label class="op"><input type="radio" name="entrega" value="Precisa buscar"> Precisa buscar</label>
+          <label class="op"><input type="radio" name="entrega" value="Leva ao ponto de coleta"><span>Eu levo ao ponto de coleta<small>Remembeer Santiago · Getúlio Vargas, 1106</small></span></label>
+          <label class="op"><input type="radio" name="entrega" value="Precisa buscar"><span>Precisa buscar<small>A equipe busca no endereço informado acima</small></span></label>
         </div>
-      </div>
-      <div class="coleta" data-se="entrega=Leva ao ponto de coleta" hidden>
-        <b>Remembeer Santiago</b>
-        Getúlio Vargas, 1106 · Santiago/RS
-      </div>
-      <div class="campo" data-se="entrega=Precisa buscar" hidden>
-        <label for="endereco_retirada" class="req">Endereço para retirada</label>
-        <input type="text" id="endereco_retirada" name="endereco_retirada" autocomplete="street-address">
       </div>
     </fieldset>
 
-    <fieldset data-se="ajuda=Mão de obra" hidden>
-      <legend>Trabalho voluntário</legend>
+    <fieldset>
+      <legend>Trabalho voluntário <span class="opc">opcional</span></legend>
+      <p class="nota-secao">Preencha só se puder ajudar com trabalho.</p>
       <div class="campo" data-grupo="habilidades">
-        <span class="rotulo req">No que pode ajudar?</span>
+        <span class="rotulo">No que pode ajudar?</span>
         <div class="opcoes">
           <label class="op"><input type="checkbox" name="habilidades" value="Colocar lona/telhado"> Colocar lona / consertar telhado</label>
           <label class="op"><input type="checkbox" name="habilidades" value="Limpeza"> Limpeza de casas</label>
-          <label class="op"><input type="checkbox" name="habilidades" value="Carpintaria"> Carpintaria</label>
-          <label class="op"><input type="checkbox" name="habilidades" value="Elétrica"> Elétrica</label>
           <label class="op"><input type="checkbox" name="habilidades" value="Carregar/montar móveis"> Carregar e montar móveis</label>
           <label class="op"><input type="checkbox" name="habilidades" value="Triagem no ponto de coleta"> Triagem no ponto de coleta</label>
-          <label class="op"><input type="checkbox" name="habilidades" value="Preencher pedidos com famílias"> Ajudar famílias a preencher pedidos</label>
         </div>
       </div>
     </fieldset>
 
-    <fieldset data-se="ajuda=Transporte" hidden>
-      <legend>Transporte</legend>
+    <fieldset>
+      <legend>Transporte <span class="opc">opcional</span></legend>
+      <p class="nota-secao">Preencha só se tiver veículo para ajudar.</p>
       <div class="campo" data-grupo="veiculo">
-        <span class="rotulo req">Qual veículo?</span>
+        <span class="rotulo">Tem veículo para buscar e entregar doações?</span>
         <div class="opcoes duas">
-          <label class="op"><input type="radio" name="veiculo" value="Carro"> Carro</label>
-          <label class="op"><input type="radio" name="veiculo" value="Caminhonete/utilitário"> Caminhonete / utilitário</label>
-          <label class="op"><input type="radio" name="veiculo" value="Caminhão"> Caminhão</label>
-          <label class="op"><input type="radio" name="veiculo" value="Carro com carretinha"> Carro com carretinha</label>
-        </div>
-      </div>
-    </fieldset>
-
-    <fieldset data-se="ajuda=Mão de obra|Transporte" hidden>
-      <legend>Disponibilidade</legend>
-      <div class="campo">
-        <span class="rotulo">Dias</span>
-        <div class="opcoes dias">
-          <label class="op"><input type="checkbox" name="dias" value="Seg"> Seg</label>
-          <label class="op"><input type="checkbox" name="dias" value="Ter"> Ter</label>
-          <label class="op"><input type="checkbox" name="dias" value="Qua"> Qua</label>
-          <label class="op"><input type="checkbox" name="dias" value="Qui"> Qui</label>
-          <label class="op"><input type="checkbox" name="dias" value="Sex"> Sex</label>
-          <label class="op"><input type="checkbox" name="dias" value="Sáb"> Sáb</label>
-          <label class="op"><input type="checkbox" name="dias" value="Dom"> Dom</label>
-        </div>
-      </div>
-      <div class="campo">
-        <span class="rotulo">Turnos</span>
-        <div class="opcoes duas">
-          <label class="op"><input type="checkbox" name="turnos" value="Manhã"> Manhã</label>
-          <label class="op"><input type="checkbox" name="turnos" value="Tarde"> Tarde</label>
-          <label class="op"><input type="checkbox" name="turnos" value="Noite"> Noite</label>
+          <label class="op"><input type="checkbox" name="veiculo" value="Carro"> Carro</label>
+          <label class="op"><input type="checkbox" name="veiculo" value="Caminhonete/utilitário"> Caminhonete / utilitário</label>
+          <label class="op"><input type="checkbox" name="veiculo" value="Caminhão"> Caminhão</label>
         </div>
       </div>
     </fieldset>
@@ -252,46 +204,29 @@ input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 3px
 // Mesma URL do Web App usada no pedido.html (termina em /exec)
 const ENDPOINT = "https://script.google.com/macros/s/AKfycbzoy5lbL8Ses1Yf8DbkC10vMzN2HMdptC7oCg8yDiMteAugSLRmNN9lJ59lnzrUOv1obA/exec";
 const CHAVE_RASCUNHO = "ajuda-santiago-doacao";
-const MULTI = ["ajuda", "itens", "habilidades", "dias", "turnos"];
+const MULTI = ["itens", "habilidades", "veiculo"];
 
 const form = document.getElementById("form");
 
-function valores(nome) {
-  return [...form.querySelectorAll(`[name="${nome}"]:checked`)].map(i => i.value);
-}
-function visivel(el) {
-  for (let n = el; n && n !== form; n = n.parentElement) if (n.hidden) return false;
-  return true;
-}
-function atualizarCondicionais() {
-  // repete até estabilizar, porque há condicionais dentro de condicionais
-  for (let i = 0; i < 3; i++) {
-    form.querySelectorAll("[data-se]").forEach(el => {
-      const [nome, alvos] = el.dataset.se.split("=");
-      el.hidden = !alvos.split("|").some(a => valores(nome).includes(a));
-    });
-  }
-}
-
-form.addEventListener("change", () => { atualizarCondicionais(); salvarRascunho(); });
+form.addEventListener("change", salvarRascunho);
 form.addEventListener("input", salvarRascunho);
 
-// só envia o que está visível: se desmarcou "Doar itens", os itens não vão junto
 function coletar() {
   const d = { tipo: "doacao" };
+  MULTI.forEach(k => d[k] = []);
   form.querySelectorAll("[name]").forEach(el => {
-    if (el.name === "website") { d.website = el.value; return; }
-    if (!visivel(el)) return;
-    if (MULTI.includes(el.name)) {
-      d[el.name] = d[el.name] || [];
-      if (el.checked) d[el.name].push(el.value);
-    } else if (el.type === "radio" || el.type === "checkbox") {
-      if (el.checked) d[el.name] = el.value;
-    } else {
-      d[el.name] = el.value.trim();
-    }
+    if (MULTI.includes(el.name)) { if (el.checked) d[el.name].push(el.value); }
+    else if (el.type === "radio" || el.type === "checkbox") { if (el.checked) d[el.name] = el.value; }
+    else d[el.name] = el.value.trim();
   });
-  MULTI.forEach(k => d[k] = d[k] || []);
+  // "Como quer ajudar" sai do que a pessoa preencheu em cada seção
+  const doaItens = d.itens.length || d.material_desc || d.colchoes_desc || d.outros_itens;
+  d.ajuda = [];
+  if (doaItens) d.ajuda.push("Doar itens");
+  if (d.habilidades.length) d.ajuda.push("Mão de obra");
+  if (d.veiculo.length) d.ajuda.push("Transporte");
+  if (!doaItens) delete d.entrega;
+  d.veiculo = d.veiculo.join(", ");
   return d;
 }
 
@@ -301,16 +236,12 @@ function validar(d) {
   const marcar = (el, nome) => { el.classList.add("erro-campo"); faltando.push({ el, nome }); };
   const grupo = g => form.querySelector(`[data-grupo="${g}"]`);
 
-  if (!d.nome) marcar(form.nome, "nome");
-  if ((d.telefone || "").replace(/\D/g, "").length < 10) marcar(form.telefone, "telefone com DDD");
-  if (!d.ajuda.length) marcar(grupo("ajuda"), "como quer ajudar");
-  if (d.ajuda.includes("Doar itens")) {
-    if (!d.itens.length && !d.outros_itens) marcar(grupo("itens"), "o que vai doar");
-    if (!d.entrega) marcar(grupo("entrega"), "como a doação chega");
-    if (d.entrega === "Precisa buscar" && !d.endereco_retirada) marcar(form.endereco_retirada, "endereço de retirada");
-  }
-  if (d.ajuda.includes("Mão de obra") && !d.habilidades.length) marcar(grupo("habilidades"), "no que pode ajudar");
-  if (d.ajuda.includes("Transporte") && !d.veiculo) marcar(grupo("veiculo"), "veículo");
+  if (!d.nome) marcar(document.getElementById("nome"), "nome");
+  if ((d.telefone || "").replace(/\D/g, "").length < 10) marcar(document.getElementById("telefone"), "telefone com DDD");
+  if (!d.endereco) marcar(document.getElementById("endereco"), "endereço");
+  if (!d.bairro) marcar(document.getElementById("bairro"), "bairro");
+  if (!d.ajuda.length) marcar(grupo("itens"), "pelo menos uma forma de ajudar (itens, trabalho voluntário ou transporte)");
+  if (d.ajuda.includes("Doar itens") && !d.entrega) marcar(grupo("entrega"), "como a doação chega até nós");
   if (d.consentimento !== "Sim") marcar(grupo("consentimento"), "autorização");
   return faltando;
 }
@@ -379,7 +310,6 @@ form.addEventListener("submit", async e => {
 });
 
 restaurarRascunho();
-atualizarCondicionais();
 </script>
 </body>
 </html>
