@@ -68,6 +68,11 @@ input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 3px
 .enviar { font-family: var(--font-display); font-weight: 800; font-size: 1.6rem; text-transform: uppercase; background: var(--lona); color: var(--lona-ink); border: none; border-radius: 6px; padding: 16px; cursor: pointer; min-height: 60px; }
 .enviar:disabled { opacity: .6; cursor: progress; }
 .enviar:focus-visible { outline: 3px solid var(--alerta); outline-offset: 3px; }
+.aviso-dup { background: var(--alerta-soft); border-left: 5px solid var(--alerta); padding: 14px 16px; display: grid; gap: 10px; }
+.aviso-dup p { margin: 0; }
+.botoes-dup { display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: 8px; }
+.botoes-dup .enviar { font-size: 1.2rem; min-height: 52px; padding: 12px; }
+.enviar.secundario { background: var(--surface); color: var(--lona); border: 2px solid var(--lona); }
 .rascunho { font-size: .875rem; color: var(--muted); margin: 0; text-align: center; }
 
 .sucesso { background: var(--ok-soft); border-left: 5px solid var(--ok); padding: 20px 16px; display: grid; gap: 8px; }
@@ -281,6 +286,14 @@ input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 3px
     </fieldset>
 
     <div id="erro" class="msg-erro" role="alert" hidden></div>
+    <div id="aviso-dup" class="aviso-dup" role="alert" hidden>
+      <p><b>Já recebemos um pedido com este telefone ou endereço.</b> A equipe já tem as informações e vai entrar em contato.</p>
+      <p>Só envie de novo se a situação piorou ou se é outra família no mesmo endereço.</p>
+      <div class="botoes-dup">
+        <button type="button" class="enviar secundario" id="dup-nao">Não enviar</button>
+        <button type="button" class="enviar" id="dup-sim">Enviar mesmo assim</button>
+      </div>
+    </div>
     <button type="submit" class="enviar" id="enviar">Enviar pedido</button>
     <p class="rascunho" id="rascunho-info">O que você digita fica salvo neste aparelho até enviar.</p>
   </form>
@@ -386,12 +399,26 @@ form.addEventListener("submit", async e => {
     erroBox.hidden = false;
     return;
   }
+  await enviar(d);
+});
+
+const avisoDup = document.getElementById("aviso-dup");
+let pendente = null;
+
+async function enviar(d) {
   btn.disabled = true;
   btn.textContent = "Enviando…";
   try {
     // text/plain evita o preflight CORS no Apps Script
     const res = await fetch(ENDPOINT, { method: "POST", body: JSON.stringify(d) });
     const r = await res.json();
+    if (r.duplicado) {
+      pendente = d;
+      btn.hidden = true;
+      avisoDup.hidden = false;
+      avisoDup.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
     if (!r.ok) throw new Error(r.erro || "falha");
     limparRascunho();
     document.getElementById("protocolo").textContent = r.protocolo;
@@ -405,6 +432,22 @@ form.addEventListener("submit", async e => {
     btn.disabled = false;
     btn.textContent = "Enviar pedido";
   }
+}
+
+document.getElementById("dup-sim").addEventListener("click", async () => {
+  avisoDup.hidden = true;
+  btn.hidden = false;
+  if (pendente) await enviar({ ...pendente, confirmar_duplicado: true });
+});
+
+document.getElementById("dup-nao").addEventListener("click", () => {
+  avisoDup.hidden = true;
+  btn.hidden = false;
+  pendente = null;
+  limparRascunho();
+  form.reset();
+  erroBox.textContent = "Pedido não enviado. O pedido anterior continua valendo.";
+  erroBox.hidden = false;
 });
 
 restaurarRascunho();
