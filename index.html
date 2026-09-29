@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Ajuda Santiago: pedidos de ajuda e doações para as vítimas do temporal em Santiago/RS.">
+<meta property="og:title" content="Ajuda Santiago">
+<meta property="og:description" content="Precisa de ajuda ou quer doar? Preencha o formulário.">
+<style>*,*::before,*::after{box-sizing:border-box}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Ajuda Santiago</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+/* Layout: coluna única estreita, estilo placa de sinalização. Lona azul como acento, laranja só para emergência. */
+:root {
+  --bg: #f3f5f7;
+  --surface: #ffffff;
+  --fg: #16202b;
+  --muted: #56626f;
+  --line: #d6dde4;
+  --lona: #1f5fa8;
+  --lona-ink: #ffffff;
+  --lona-soft: #e3edf8;
+  --alerta: #c2410c;
+  --alerta-soft: #fdeee4;
+  --font-display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+  --font-body: "Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f151c; --surface: #17202a; --fg: #e8edf2; --muted: #9aa7b4; --line: #2a3643;
+    --lona: #4d8fdb; --lona-ink: #07111d; --lona-soft: #16293f;
+    --alerta: #fb8a4a; --alerta-soft: #2e1a10;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f151c; --surface: #17202a; --fg: #e8edf2; --muted: #9aa7b4; --line: #2a3643;
+  --lona: #4d8fdb; --lona-ink: #07111d; --lona-soft: #16293f;
+  --alerta: #fb8a4a; --alerta-soft: #2e1a10;
+  color-scheme: dark;
+}
+
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 1.0625rem; line-height: 1.5; }
+.wrap { max-width: 34rem; margin: 0 auto; padding-inline: 16px; padding-block: 28px 48px; display: grid; gap: 28px; }
+
+header { display: grid; gap: 6px; }
+.eyebrow { font-family: var(--font-display); font-weight: 600; font-size: 0.95rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--lona); }
+h1 { font-family: var(--font-display); font-weight: 800; font-size: clamp(3rem, 14vw, 4.5rem); line-height: 0.9; margin: 0; text-transform: uppercase; letter-spacing: -0.01em; }
+.lead { margin: 6px 0 0; color: var(--muted); max-width: 32rem; }
+
+h2 { font-family: var(--font-display); font-weight: 800; font-size: 1.5rem; text-transform: uppercase; letter-spacing: 0.02em; margin: 0; text-wrap: balance; }
+
+.acoes { display: grid; gap: 12px; }
+.btn { display: grid; gap: 2px; text-decoration: none; padding: 20px 20px; border-radius: 6px; border: 2px solid var(--lona); transition: transform .12s ease; }
+.btn:focus-visible { outline: 3px solid var(--alerta); outline-offset: 3px; }
+.btn:active { transform: scale(.985); }
+.btn .t { font-family: var(--font-display); font-weight: 800; font-size: 1.9rem; text-transform: uppercase; line-height: 1; }
+.btn .s { font-size: 0.975rem; }
+.btn.primario { background: var(--lona); color: var(--lona-ink); }
+.btn.secundario { background: var(--surface); color: var(--lona); }
+.btn.secundario .s { color: var(--muted); }
+.btn[aria-disabled="true"] { opacity: .55; pointer-events: none; }
+.nota { font-size: 0.925rem; color: var(--muted); margin: 0; }
+
+.emergencia { background: var(--alerta-soft); border-left: 5px solid var(--alerta); padding: 16px 16px 18px; display: grid; gap: 12px; }
+.emergencia h2 { color: var(--alerta); }
+.emergencia p { margin: 0; }
+.numeros { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.num { display: grid; justify-items: start; gap: 0; }
+.num b { font-family: var(--font-display); font-weight: 800; font-size: 2.4rem; line-height: 1; font-variant-numeric: tabular-nums; color: var(--fg); user-select: all; }
+.num span { font-size: 0.85rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+
+section { display: grid; gap: 12px; }
+.coleta { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 16px; display: grid; gap: 4px; }
+.coleta .nome { font-weight: 700; font-size: 1.15rem; }
+.coleta .end { color: var(--muted); user-select: all; }
+.coleta a { color: var(--lona); font-weight: 600; margin-top: 6px; justify-self: start; }
+
+.itens { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.itens li { background: var(--lona-soft); color: var(--fg); padding: 6px 12px; border-radius: 999px; font-weight: 600; font-size: 0.95rem; }
+
+.passos { margin: 0; padding-left: 1.25rem; display: grid; gap: 6px; }
+.passos li::marker { font-family: var(--font-display); font-weight: 800; color: var(--lona); }
+
+footer { border-top: 1px solid var(--line); padding-top: 16px; font-size: 0.9rem; color: var(--muted); }
+footer p { margin: 0 0 6px; }
+
+@media (prefers-reduced-motion: reduce) { .btn { transition: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Temporal · Santiago/RS</div>
+    <h1>Ajuda<br>Santiago</h1>
+    <p class="lead">Preencha o formulário certo e a equipe entra em contato pelo WhatsApp.</p>
+  </header>
+
+  <div class="acoes">
+    <a class="btn primario" id="btn-pedido" href="#" target="_blank" rel="noopener">
+      <span class="t">Preciso de ajuda</span>
+      <span class="s">Lona, roupas, móveis, alimentos, mão de obra</span>
+    </a>
+    <a class="btn secundario" id="btn-doacao" href="#" target="_blank" rel="noopener">
+      <span class="t">Quero doar ou ajudar</span>
+      <span class="s">Itens, material, transporte ou trabalho voluntário</span>
+    </a>
+    <p class="nota">Um pedido por casa. Se a situação mudar, preencha de novo.</p>
+  </div>
+
+  <div class="emergencia" role="note">
+    <h2>Risco de vida? Ligue agora</h2>
+    <p>Fio caído, desabamento ou pessoa ferida não esperam formulário.</p>
+    <div class="numeros">
+      <div class="num"><b>199</b><span>Defesa Civil</span></div>
+      <div class="num"><b>193</b><span>Bombeiros</span></div>
+      <div class="num"><b>192</b><span>SAMU</span></div>
+    </div>
+  </div>
+
+  <section>
+    <h2>Ponto de coleta</h2>
+    <div class="coleta">
+      <span class="nome">Remembeer Santiago</span>
+      <span class="end">Getúlio Vargas, 1106 · Santiago/RS</span>
+      <a href="https://www.google.com/maps/search/?api=1&query=Remembeer+Getúlio+Vargas+1106+Santiago+RS" target="_blank" rel="noopener">Abrir no mapa →</a>
+    </div>
+  </section>
+
+  <section>
+    <h2>O que estamos recebendo</h2>
+    <ul class="itens">
+      <li>Lonas</li>
+      <li>Roupas</li>
+      <li>Calçados</li>
+      <li>Cobertores e roupa de cama</li>
+      <li>Colchões</li>
+      <li>Móveis</li>
+      <li>Alimentos</li>
+      <li>Higiene e limpeza</li>
+    </ul>
+    <p class="nota">Móveis e itens grandes: cadastre no formulário de doação que a equipe combina a retirada.</p>
+  </section>
+
+  <section>
+    <h2>Não consegue preencher?</h2>
+    <ol class="passos">
+      <li>Peça a um vizinho, familiar ou voluntário para preencher por você.</li>
+      <li>Informe telefone e endereço com ponto de referência.</li>
+      <li>Aguarde o contato da equipe pelo WhatsApp.</li>
+    </ol>
+  </section>
+
+  <footer>
+    <p>Ação voluntária da comunidade de Santiago/RS.</p>
+    <p>Seus dados são usados só para organizar a ajuda.</p>
+  </footer>
+</div>
+
+<script>
+// Cole aqui os links "divulgar" gerados pelo script do Google Forms
+const LINKS = {
+  pedido: "",
+  doacao: "",
+};
+for (const [chave, id] of [["pedido", "btn-pedido"], ["doacao", "btn-doacao"]]) {
+  const el = document.getElementById(id);
+  if (LINKS[chave]) {
+    el.href = LINKS[chave];
+  } else {
+    el.setAttribute("aria-disabled", "true");
+    el.querySelector(".s").textContent = "Formulário disponível em instantes";
+  }
+}
+</script>
+</body>
+</html>
